@@ -158,6 +158,7 @@ class AKREGATOR_EXPORT Folder : public TreeNode
         bool subtreeContains( const Akregator::TreeNode* node ) const;
 
         /* reimp */ KJob* createMarkAsReadJob();
+        /* reimp */ KJob* createMarkPageAsReadJob();
 
     signals:
         /** emitted when a child was added */

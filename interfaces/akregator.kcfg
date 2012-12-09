@@ -49,6 +49,7 @@
     <entry key="ColorNewArticles" type="Color">
         <default>#FF0000</default>
     </entry>
+    <entry key="PaginationCount" type="Int" />
  </group>
  <group name="HTML Settings" >
   <entry key="Fonts" type="StringList" />

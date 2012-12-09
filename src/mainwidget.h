@@ -174,6 +174,8 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         void slotFetchAllFeeds();
         /** marks all articles in the currently selected feed as read */
         void slotMarkAllRead();
+        /** marks all articles in the currently shown Page as read */
+        void slotMarkPageRead();
         /** marks all articles in all feeds in the tree as read */
         void slotMarkAllFeedsRead();
         /** opens the homepage of the currently selected feed */

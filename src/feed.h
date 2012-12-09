@@ -216,6 +216,7 @@ class AKREGATOR_EXPORT Feed : public TreeNode, public virtual FaviconListener
         QVector<Folder*> folders();
 
         /* reimp */ KJob* createMarkAsReadJob();
+        /* reimp */ KJob* createMarkPageAsReadJob();
 
     public slots:
         /** starts fetching */

@@ -61,6 +61,10 @@ KCMAkregatorAppearanceConfig::KCMAkregatorAppearanceConfig( QWidget* parent, con
              m_ui.slider_minimumFontSize, SLOT(setValue(int)) );
     connect( m_ui.kcfg_MediumFontSize, SIGNAL(valueChanged(int)),
              m_ui.slider_mediumFontSize, SLOT(setValue(int)) );
+    connect( m_ui.slider_PaginationCount, SIGNAL(sliderMoved(int)),
+             m_ui.kcfg_PaginationCount , SLOT(setValue(int)) );
+    connect( m_ui.kcfg_PaginationCount, SIGNAL(valueChanged(int)),
+             m_ui.slider_PaginationCount, SLOT(setValue(int)) );
 
     KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrappearanceconfig" ), 0,
                                         ki18n( "Configure Feed Reader Appearance" ),
@@ -70,6 +74,7 @@ KCMAkregatorAppearanceConfig::KCMAkregatorAppearanceConfig( QWidget* parent, con
     about->addAuthor( ki18n( "Frank Osterfeld" ), KLocalizedString(), "osterfeld@kde.org" );
     setAboutData( about );
 
+    m_ui.slider_PaginationCount->setDisabled( Settings::self()->isImmutable("PaginationCount") );
     m_ui.slider_minimumFontSize->setDisabled( Settings::self()->isImmutable("MinimumFontSize") );
     m_ui.slider_mediumFontSize->setDisabled( Settings::self()->isImmutable("MediumFontSize") );
     m_ui.lbl_MinimumFontSize->setDisabled( Settings::self()->isImmutable("MinimumFontSize") );

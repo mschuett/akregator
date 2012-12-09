@@ -535,6 +535,20 @@ void ArticleViewer::slotUpdateCombinedView()
 
    const std::vector< shared_ptr<const AbstractMatcher> >::const_iterator filterEnd = m_filters.end();
 
+   /* count unread articles (only for infoline) */
+   unsigned unread = 0;
+   
+   Q_FOREACH( const Article& i, m_articles ) {
+       if ( i.isDeleted() )
+           continue;
+       if ( std::find_if( m_filters.begin(), m_filters.end(), !bind( &AbstractMatcher::matches, _1, i ) ) != filterEnd )
+           continue;
+       unread++;
+   }
+  
+   /* pagination */ 
+   unsigned pagecount = Settings::paginationCount();
+   unsigned c = 0;
    Q_FOREACH( const Article& i, m_articles )
    {
        if ( i.isDeleted() )
@@ -545,6 +559,18 @@ void ArticleViewer::slotUpdateCombinedView()
 
        text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatArticle( i, ArticleFormatter::NoIcon)+"</div><p>";
        ++num;
+       if (++c >= pagecount) {
+		 /* infoline */
+         text += "<hr style=\"clear: both;\" /><br />";
+         text += "<i>";
+         text += QString::number(c);
+         text += " out of ";
+         text += QString::number(unread);
+         text += " unread/filtered (and ";
+         text += QString::number(m_articles.count());
+         text += " total) articles</i>";
+         break;
+      }
    }
 
    kDebug() <<"Combined view rendering: (" << num <<" articles):" <<"generating HTML:" << spent.elapsed() <<"ms";

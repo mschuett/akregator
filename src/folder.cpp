@@ -322,6 +322,14 @@ KJob* Folder::createMarkAsReadJob()
     return job.release();
 }
 
+KJob* Folder::createMarkPageAsReadJob()
+{
+    std::auto_ptr<CompositeJob> job( new CompositeJob );
+    Q_FOREACH( Feed* const i, feeds() )
+        job->addSubjob( i->createMarkPageAsReadJob() );
+    return job.release();
+}
+
 void Folder::slotChildChanged(TreeNode* /*node*/)
 {
     updateUnreadCount();

@@ -435,6 +435,36 @@ KJob* Feed::createMarkAsReadJob()
     return job.release();
 }
 
+KJob* Feed::createMarkPageAsReadJob()
+{
+    std::auto_ptr<ArticleModifyJob> job( new ArticleModifyJob );
+    
+    unsigned pagecount = Settings::paginationCount();
+    unsigned char c = 0;
+    QList<Article> all_articles;
+    
+    all_articles << articles();
+    std::sort( all_articles.begin(), all_articles.end() );
+    
+    Q_FOREACH ( const Article& i, all_articles )
+    {
+        if (i.status() == Read)
+            continue;
+    
+	    c++;	
+        kDebug() << c
+                << i.guid() 
+                << Utils::stripTags(i.title()).simplified().left(20) << "\n";
+        
+        const ArticleId aid = { xmlUrl(), i.guid() };
+        job->setStatus( aid, Read );
+        if (c >= pagecount) {
+          break;
+        }
+    }
+    return job.release();
+}
+
 void Feed::slotAddToFetchQueue(FetchQueue* queue, bool intervalFetchOnly)
 {
     if (!intervalFetchOnly)

@@ -748,6 +748,15 @@ void Akregator::MainWidget::slotMarkAllRead()
     job->start();
 }
 
+void Akregator::MainWidget::slotMarkPageRead()
+{
+    if(!m_selectionController->selectedSubscription())
+        return;
+    KJob* job = m_selectionController->selectedSubscription()->createMarkPageAsReadJob();
+    connect(job, SIGNAL(finished(KJob*)), m_selectionController, SLOT(forceFilterUpdate()) );
+    job->start();
+}
+
 void Akregator::MainWidget::slotSetTotalUnread()
 {
     emit signalUnreadCountChanged( m_feedList ? m_feedList->unread() : 0 );

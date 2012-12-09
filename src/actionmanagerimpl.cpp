@@ -279,6 +279,11 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotMarkAllRead()));
     action->setShortcuts(KShortcut( "Ctrl+R" ));
 
+    action = coll->addAction("feed_mark_page_as_read");
+    action->setIcon(KIcon("mail-mark-read"));
+    action->setText(i18n("&Mark Page as Read"));
+    connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotMarkPageRead()));
+
     action = coll->addAction("feed_mark_all_feeds_as_read");
     action->setIcon(KIcon("mail-mark-read"));
     action->setText(i18n("Ma&rk All Feeds as Read"));

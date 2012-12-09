@@ -184,6 +184,7 @@ public:
     void setListViewScrollBarPositions( const QPoint& pos );
 
     virtual KJob* createMarkAsReadJob() = 0;
+    virtual KJob* createMarkPageAsReadJob() = 0;
 
 public slots:
 
