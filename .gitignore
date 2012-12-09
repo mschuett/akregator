@@ -5,3 +5,12 @@ cmake_install.cmake
 *.files
 config-akregator.h
 nbproject
+interfaces/akregatorconfig.cpp
+interfaces/akregatorconfig.h
+*.moc
+*automoc.cpp
+interfaces/moc_plugin.cpp
+plugins/mk4storage/moc_mk4plugin.cpp
+src/akregator.shell
+src/moc_actionmanager.cpp
+
