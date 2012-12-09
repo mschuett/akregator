@@ -100,10 +100,26 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
         
         QString getCss() const;
         
-    private:
+    protected:
         DefaultCombinedViewFormatter();
         
+    private:
         KUrl m_imageDir;
+};
+
+class DefaultMosaicViewFormatter : public DefaultCombinedViewFormatter
+{
+            
+    public:
+        
+        explicit DefaultMosaicViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
+        
+        QString formatArticle(const Article& article, IconOption option) const;
+        
+        QString getCss() const;
+        
+    private:
+        DefaultMosaicViewFormatter();
 };
 
 } // namespace Akregator

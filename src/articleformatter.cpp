@@ -350,6 +350,10 @@ DefaultCombinedViewFormatter::DefaultCombinedViewFormatter(const KUrl& imageDir,
 {
 }
 
+DefaultMosaicViewFormatter::DefaultMosaicViewFormatter(const KUrl& imageDir, QPaintDevice* device ) : DefaultCombinedViewFormatter(imageDir, device)
+{
+}
+
 DefaultNormalViewFormatter::DefaultNormalViewFormatter(const KUrl& imageDir, QPaintDevice* device )
     : ArticleFormatter( device ),
     m_imageDir( imageDir ),
@@ -551,4 +555,113 @@ QString DefaultNormalViewFormatter::formatSummary(TreeNode* node) const
 QString DefaultCombinedViewFormatter::formatSummary(TreeNode*) const
 {
     return QString();
+}
+
+QString DefaultMosaicViewFormatter::getCss() const
+{
+    QString css = DefaultCombinedViewFormatter::getCss();
+    
+    // own additions for picture feeds
+    css += QString(
+            "div.article { float: left ! important;"
+                         " max-width: 250px ! important;"
+                         " height: 500px;"
+                         " overflow: hidden;"
+            "}\n"
+            ".content > img { max-width: 240px ! important; padding: 5px;}\n"
+    );
+    return css;
+}
+/*
+ * rather small changes from CombinedView
+ */
+QString DefaultMosaicViewFormatter::formatArticle(const Article& article, IconOption icon /* unused*/ ) const
+{
+    QString text;
+    const QString enc = formatEnclosure( *article.enclosure() );
+    text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
+
+    const QString strippedTitle = Utils::stripTags( article.title() );
+
+    if (!strippedTitle.isEmpty())
+    {
+        text += QString("<div class=\"headertitle\" dir=\"%1\">\n").arg(Utils::directionOf(strippedTitle));
+        if (article.link().isValid())
+            text += "<a href=\""+article.link().url()+"\">";
+        text += strippedTitle;
+        if (article.link().isValid())
+            text += "</a>";
+        text += "</div>\n";
+    }
+    if (article.pubDate().isValid())
+    {
+        text += QString("<span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Date")));
+        text += QString ("%1:").arg(i18n("Date"));
+        text += "</span><span class=\"headertext\">";
+        text += KGlobal::locale()->formatDateTime(article.pubDate(), KLocale::FancyShortDate) + "</span>\n";
+    }
+
+    const QString author = article.authorAsHtml();
+    if (!author.isEmpty())
+    {
+        text += QString("<br/><span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Author")));
+        text += QString ("%1:").arg(i18n("Author"));
+        text += "</span><span class=\"headertext\">";
+        text += author+"</span>\n"; // TODO: might need RTL?
+    }
+
+    if (!enc.isEmpty())
+    {
+        text += QString("<br/><span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Enclosure")));
+        text += QString ("%1:").arg(i18n("Enclosure"));
+        text += "</span><span class=\"headertext\">";
+        text += enc+"</span>\n"; // TODO: might need RTL?
+    }
+
+    text += "</div>\n"; // end headerbox
+
+    const QString content = article.content( Article::DescriptionAsFallback );
+    if (!content.isEmpty())
+    {
+        text += QString("<div dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(content)) );
+        text += "<span class=\"content\">"+content+"</span>";
+        text += "</div>";
+    }
+
+    text += "<div class=\"body\">";
+
+    if (article.commentsLink().isValid())
+    {
+        text += "<a class=\"contentlink\" href=\"";
+        text += article.commentsLink().url();
+        text += "\">" + i18n( "Comments");
+        if (article.comments())
+        {
+            text += " ("+ QString::number(article.comments()) +')';
+        }
+        text += "</a>";
+    }
+
+
+    if (!enc.isEmpty())
+        text += QString("<p><em>%1</em> %2</p>").arg(i18n("Enclosure:")).arg(enc);
+
+    if (article.link().isValid() || (article.guidIsPermaLink() && KUrl(article.guid()).isValid()))
+    {
+        text += "<p><a class=\"contentlink\" href=\"";
+        // in case link isn't valid, fall back to the guid permaLink.
+        if (article.link().isValid())
+        {
+            text += article.link().url();
+        }
+        else
+        {
+            text += article.guid();
+        }
+        text += "\">" + i18n( "Complete Story" ) + "</a></p>";
+    }
+
+    text += "</div>";
+    //kDebug() << text;
+    return text;
 }

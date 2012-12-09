@@ -87,7 +87,8 @@ ArticleViewer::ArticleViewer(QWidget *parent)
       m_viewMode(NormalView),
       m_part( new ArticleViewerPart( this ) ),
       m_normalViewFormatter( new DefaultNormalViewFormatter( m_imageDir, m_part->view() ) ),
-      m_combinedViewFormatter( new DefaultCombinedViewFormatter( m_imageDir, m_part->view() ) )
+//      m_combinedViewFormatter( new DefaultCombinedViewFormatter( m_imageDir, m_part->view() )
+      m_combinedViewFormatter( new DefaultMosaicViewFormatter( m_imageDir, m_part->view() ) )
 {
     QGridLayout* layout = new QGridLayout(this);
     layout->setMargin(0);
