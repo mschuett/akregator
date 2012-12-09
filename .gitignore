@@ -1,0 +1,7 @@
+Makefile
+CMakeFiles
+CTestTestfile.cmake
+cmake_install.cmake
+*.files
+config-akregator.h
+nbproject
